@@ -109,17 +109,17 @@ public class KafkaConsumerThread implements Runnable{
 
             while (consumerIterator.hasNext()) {
 
-                MessageAndMetadata<byte[], byte[]> incommingData = consumerIterator.next();
+                MessageAndMetadata<byte[], byte[]> incomingData = consumerIterator.next();
 
                 final Exchange exchange = endpoint.createExchange();
 
-                if (incommingData != null) {
+                if (incomingData != null) {
 
-                    constructExchange(incommingData, configuration, exchange);
+                    constructExchange(incomingData, configuration, exchange);
 
                     if (LOGGER.isDebugEnabled()) {
 
-                        LOGGER.info("Kafka Consumer Message received : " + incommingData);
+                        LOGGER.info("Kafka Consumer Message received : " + incomingData);
                     }
 
                     try {
