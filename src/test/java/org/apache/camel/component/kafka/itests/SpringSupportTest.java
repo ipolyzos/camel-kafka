@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.camel.component.kafka;
+package org.apache.camel.component.kafka.itests;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -42,7 +42,7 @@ public class SpringSupportTest extends CamelSpringTestSupport {
      * @throws Exception
      */
     @Test
-    public void schemaExistsShouldReturnFalseAfterDelete() throws Exception {
+    public void basicTest() throws Exception {
 
         final String PAYLOAD = "Test";
 
