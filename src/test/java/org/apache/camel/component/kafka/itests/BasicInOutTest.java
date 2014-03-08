@@ -72,7 +72,7 @@ public class BasicInOutTest extends CamelTestSupport {
             @Override
             public void configure() throws Exception {
 
-                from("direct:biooutt").to("kafka:fooiout?metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
+                from("direct:biooutt").to("kafka:fooiout?metadataBrokerList=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
                 from("kafka:fooiout?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
             }
         };

@@ -69,7 +69,7 @@ public class KafkaProducerTest extends KafkaTestSupport {
     @Test
     public void creatingAnInstanceShouldSuccessedIfConfigurationIsNotMissing() throws Exception {
 
-        mockKafkaConfiguration.setMetadataBrokerList("sampleBroker");
+        mockKafkaConfiguration.setMetadataBrokerList("sampleBroker:11");
 
         new KafkaProducer(mockKafkaEndpoint,mockKafkaConfiguration);
 

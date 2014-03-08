@@ -44,7 +44,7 @@ public class SpringSupportTest extends CamelSpringTestSupport {
     @Test
     public void basicTest() throws Exception {
 
-        final String PAYLOAD = "Test";
+        final String PAYLOAD = "SpringBasicTest";
 
         mock.reset();  // reset the mock
         template.sendBody("direct:basicTest", PAYLOAD);
@@ -66,7 +66,7 @@ public class SpringSupportTest extends CamelSpringTestSupport {
     @Override
     protected ClassPathXmlApplicationContext createApplicationContext() {
 
-        return new ClassPathXmlApplicationContext("META-INF/spring/basic-tests.xml");
+        return new ClassPathXmlApplicationContext("META-INF/spring/basic-spring-tests.xml");
     }
 
 }
