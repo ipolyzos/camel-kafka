@@ -23,8 +23,6 @@ import kafka.consumer.KafkaStream;
 import kafka.message.MessageAndMetadata;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.impl.DefaultExchangeHolder;
-import org.apache.commons.lang.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +31,12 @@ import static org.apache.camel.component.kafka.KafkaComponentUtil.constructExcha
 /**
  * Kafka Consumer Thread
  */
-public class KafkaConsumerThread implements Runnable{
+public class KafkaConsumerTask implements Runnable{
 
     /**
      * Logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerThread.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumerTask.class);
 
     /**
      * Camel Kafka endpoint
@@ -81,11 +79,11 @@ public class KafkaConsumerThread implements Runnable{
      *
      * NOTE: when used as consumer thread
      */
-    public KafkaConsumerThread(final KafkaStream stream,
-                               final KafkaEndpoint endpoint,
-                               final KafkaConsumer consumer,
-                               final Processor processor,
-                               final KafkaConfiguration configuration) {
+    public KafkaConsumerTask(final KafkaStream stream,
+                             final KafkaEndpoint endpoint,
+                             final KafkaConsumer consumer,
+                             final Processor processor,
+                             final KafkaConfiguration configuration) {
 
         this.consumerIterator = stream.iterator();
         this.endpoint = endpoint;
@@ -139,5 +137,4 @@ public class KafkaConsumerThread implements Runnable{
                 }
             }
     }
-
 }

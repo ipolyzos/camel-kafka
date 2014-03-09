@@ -49,6 +49,11 @@ public class KafkaConfiguration {
     private int concurrentConsumers = 10;
 
     /**
+     * Partition Key
+     */
+    private String partitionKey = "DEFAULT_PARTITION";
+
+    /**
      * Kafka Configuration
      */
     private Properties props;
@@ -101,6 +106,7 @@ public class KafkaConfiguration {
         setBatchNumMessages(DEFAULT_BATCH_NUM_MESSAGES.value);
         setSendBufferBytes(DEFAULT_SEND_BUFFER_BYTES.value);
         setClientId(DEFAULT_CLIENT_ID.value);
+        setKeySerializerClass(DEFAULT_KEY_SERIALIZER_CLASS.value);
     }
 
     /**
@@ -159,6 +165,25 @@ public class KafkaConfiguration {
      */
     public void setConcurrentConsumers(int concurrentConsumers) {
         this.concurrentConsumers = concurrentConsumers;
+    }
+
+
+    /**
+     * Get Partition key
+     *
+     * @return
+     */
+    public String getPartitionKey() {
+        return partitionKey;
+    }
+
+    /**
+     * Set partition key
+     *
+     * @param partitionKey
+     */
+    public void setPartitionKey(final String partitionKey) {
+        this.partitionKey = partitionKey;
     }
 
     /**

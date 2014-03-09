@@ -54,7 +54,7 @@ public enum KafkaConstants {
     DEFAULT_AUTO_OFFSET_RESET("largest"),
     DEFAULT_CONSUMER_TIMEOUT_MS("-1"),
     DEFAULT_ZOOKEEPER_SESSION_TIMEOUT_MS("6000"),
-    DEFAULT_CONNECTION_TIMEOUT_MS("6000"),
+    DEFAULT_CONNECTION_TIMEOUT_MS("60000"),
     DEFAULT_ZOOKEEPER_SYNC_TIME_MS("2000"),
     DEFAULT_REQUEST_REQUIRED_ACKS("0"),
     DEFAULT_REQUEST_TIMEOUT_MS("10000"),
@@ -62,7 +62,14 @@ public enum KafkaConstants {
     DEFAULT_MESSAGE_SEND_MAX_RETRIES("3"),
     DEFAULT_RETRY_BACKOFF_MS("100"),
     DEFAULT_TOPIC_METADATA_REFRESH_INTERVAL_MS("600000"),
-    DEFAULT_SEND_BUFFER_BYTES("102400");
+    DEFAULT_SEND_BUFFER_BYTES("102400"),
+    // assume that by default key will be of type string
+    DEFAULT_KEY_SERIALIZER_CLASS("kafka.serializer.StringEncoder"),
+
+    PARTITION_KEY("kafka.PARTITION_KEY"),
+    PARTITION("kafka.EXCHANGE_NAME"),
+    KEY("kafka.CONTENT_TYPE"),
+    TOPIC("kafka.TOPIC");
 
     /** enum value*/
     public final String value;

@@ -19,12 +19,12 @@ package org.apache.camel.component.kafka.itests;
 
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.junit4.CamelSpringTestSupport;
+import org.apache.camel.test.spring.CamelSpringTestSupport;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Spring support test
+ * Spring support tests
  */
 public class SpringSupportTest extends CamelSpringTestSupport {
 
@@ -37,12 +37,12 @@ public class SpringSupportTest extends CamelSpringTestSupport {
 
 
     /**
-     * Test the Camel-Kafka, set topic by headers
+     * Test the Camel-Kafka, set topic by headers and sync producer
      *
      * @throws Exception
      */
     @Test
-    public void basicTest() throws Exception {
+    public void setHeaderByXmlAndSyncProducerTest() throws Exception {
 
         final String PAYLOAD = "SpringBasicTest";
 
@@ -68,5 +68,4 @@ public class SpringSupportTest extends CamelSpringTestSupport {
 
         return new ClassPathXmlApplicationContext("META-INF/spring/basic-spring-tests.xml");
     }
-
 }

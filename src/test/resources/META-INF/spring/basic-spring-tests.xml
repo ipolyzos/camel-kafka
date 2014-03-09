@@ -25,7 +25,7 @@
 
         <route>
             <from uri="direct:basicTest"/>
-            <to uri="kafka:spr?metadataBrokerList=localhost:2181&amp;groupId=11"/>
+            <to uri="kafka:spr?zkConnect=localhost:2181&amp;metadataBrokerList=localhost:9092&amp;groupId=11"/>
         </route>
 
         <route>

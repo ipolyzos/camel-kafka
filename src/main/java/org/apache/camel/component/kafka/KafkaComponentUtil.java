@@ -23,8 +23,8 @@ import kafka.consumer.ConsumerConfig;
 
 import kafka.message.MessageAndMetadata;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultExchangeHolder;
-import org.apache.camel.spi.ExecutorServiceManager;
 import org.apache.commons.lang.SerializationUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -90,12 +90,10 @@ public final class KafkaComponentUtil {
     /**
      * Utility method to serialize the whole exchange.
      *
-     * @param configuration
      * @param exchange
      * @return
      */
-    public static Object serializeData(final KafkaConfiguration configuration,
-                                       final Exchange exchange) {
+    public static byte[] serializeExchange(final Exchange exchange) {
 
         return SerializationUtils.serialize(DefaultExchangeHolder.marshal(exchange));
     }
@@ -128,5 +126,22 @@ public final class KafkaComponentUtil {
 
             DefaultExchangeHolder exchangeHolder = (DefaultExchangeHolder) SerializationUtils.deserialize(incommingData.message());
             DefaultExchangeHolder.unmarshal(exchange, exchangeHolder);
+
+        fillExchangeInMessageWithMetadata(exchange, incommingData);
+    }
+
+    /**
+     * Utility method to fill in message with metadata
+     *
+     * @param exchange
+     * @param incommingData
+     */
+    private static void fillExchangeInMessageWithMetadata(final Exchange exchange,
+                                                          final MessageAndMetadata<byte[], byte[]> incommingData) {
+        final Message message = exchange.getIn();
+
+        message.setHeader(KafkaConstants.PARTITION.value, incommingData.partition());
+        message.setHeader(KafkaConstants.TOPIC.value, incommingData.topic());
+        message.setHeader(KafkaConstants.KEY.value, new String(incommingData.key()));
     }
 }

@@ -17,11 +17,8 @@
 
 package org.apache.camel.component.kafka;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static org.apache.camel.component.kafka.KafkaComponentUtil.checkProducerConfiguration;
-import static org.apache.camel.component.kafka.KafkaComponentUtil.serializeData;
-
-import java.util.Properties;
+import static org.apache.camel.component.kafka.KafkaComponentUtil.serializeExchange;
 
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -48,7 +45,7 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
     /**
      * Kafka Producer
      */
-    private final kafka.javaapi.producer.Producer<String, Object> producer;
+    private final kafka.javaapi.producer.Producer<String, byte[]> producer;
 
     /**
      * Camel-Kafka Configuration
@@ -69,7 +66,7 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
 
         /* Create Kafka Producer */
         final ProducerConfig config = new ProducerConfig(configuration.getProperties());
-        producer = new Producer<String, Object>(config);
+        producer = new Producer<String, byte[]>(config);
     }
 
     @Override
@@ -94,6 +91,16 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
      */
     private void checkAndSend(final Exchange exchange) {
 
+        String partitionKey;
+        if (exchange.getIn().getHeaders().containsKey(KafkaConstants.PARTITION_KEY)) {
+
+            partitionKey = exchange.getIn().getHeader(KafkaConstants.PARTITION_KEY.value, String.class);
+        } else {
+            LOGGER.info("No partition key set, using the default");
+
+            partitionKey     = configuration.getPartitionKey();
+        }
+
         String topicName;
         if (exchange.getIn().getHeaders().containsKey(KafkaConstants.TOPIC_NAME.value)) {
 
@@ -103,7 +110,7 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
             topicName = configuration.getTopicName();
         }
 
-        final KeyedMessage<String, Object> message = new KeyedMessage<String,  Object>(topicName, serializeData(configuration, exchange));
+        final KeyedMessage<String, byte[]> message = new KeyedMessage<String,  byte[]>(topicName, partitionKey, serializeExchange(exchange));
 
         producer.send(message);
 

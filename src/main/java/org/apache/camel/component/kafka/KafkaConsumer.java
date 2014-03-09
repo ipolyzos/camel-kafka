@@ -46,12 +46,12 @@ public class KafkaConsumer extends DefaultConsumer {
   /**
    * Kafka Consumer
    */
-  private final ConsumerConnector consumer;
+  private ConsumerConnector consumer;
 
   /**
    * Context executor service
    */
-  private final ExecutorService executor;
+  private ExecutorService executor;
 
   /**
    * Kafka Streams
@@ -87,10 +87,7 @@ public class KafkaConsumer extends DefaultConsumer {
     // validate configuration
     checkConsumerConfiguration(configuration);
 
-    this.executor = getExecutorService(endpoint, configuration);
 
-    // Kafka Consumer initialisation
-    consumer = Consumer.createJavaConsumerConnector(createConsumerConfig(configuration));
 
   }
 
@@ -104,6 +101,11 @@ public class KafkaConsumer extends DefaultConsumer {
       LOGGER.info("Starting Kafka Consumer");
     }
 
+    this.executor = getExecutorService(endpoint, configuration);
+
+    // Kafka Consumer initialisation
+    consumer = Consumer.createJavaConsumerConnector(createConsumerConfig(configuration));
+
     final Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
     topicCountMap.put(configuration.getTopicName(), configuration.getConcurrentConsumers());
 
@@ -115,7 +117,7 @@ public class KafkaConsumer extends DefaultConsumer {
     // create different thread to process streams
     for (final KafkaStream stream : streams) {
 
-      executor.submit(new KafkaConsumerThread(stream, endpoint, this, processor, configuration));
+      executor.submit(new KafkaConsumerTask(stream, endpoint, this, processor, configuration));
     }
   }
 
