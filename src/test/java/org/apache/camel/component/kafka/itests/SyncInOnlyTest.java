@@ -35,7 +35,7 @@ import org.junit.Test;
 /**
  * Camel-Kafka Basic InOnly Integration tests
  */
-//@Ignore("to run manually!")
+@Ignore("to run manually!")
 public class SyncInOnlyTest extends KafkaTestSupport {
 
     @EndpointInject(uri = "mock:result")

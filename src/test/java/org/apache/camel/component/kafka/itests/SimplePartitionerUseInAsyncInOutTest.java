@@ -27,12 +27,13 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaTestSupport;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Camel-Kafka Basic InOut Integration tests
  */
-//@Ignore("to run manually!")
+@Ignore("to run manually!")
 public class SimplePartitionerUseInAsyncInOutTest extends KafkaTestSupport {
 
     final long uid = new Random().nextLong();

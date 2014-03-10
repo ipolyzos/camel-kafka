@@ -35,8 +35,6 @@
     </description>
 
     <properties>
-        <powermock-version>1.5.1</powermock-version>
-
         <camel.osgi.import>
             org.slf4j,
             org.apache.commons.lang,
@@ -55,6 +53,13 @@
         </camel.osgi.export.pkg>
         <camel.osgi.export.pkg>org.apache.camel.component.kafka.*</camel.osgi.export.pkg>
         <camel.osgi.export.service>org.apache.camel.spi.ComponentResolver;component=kafka</camel.osgi.export.service>
+
+        <!-- libraries versions -->
+        <commons-lang-version>2.4_6</commons-lang-version>
+        <powermock-version>1.5.1</powermock-version>
+        <yammer-metrics-version>2.0.2</yammer-metrics-version>
+        <kafka_2.10-version>0.8.0_1-SNAPSHOT</kafka_2.10-version>
+        <zkclient-version>0.3</zkclient-version>
     </properties>
     
     <build>
@@ -140,28 +145,27 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.kafka_2.10</artifactId>
-            <version>0.8.0_1-SNAPSHOT</version>
+            <version>${kafka_2.10-version}</version>
         </dependency>
 
         <!-- zkClient -->
         <dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
-            <version>0.3</version>
+            <version>${zkclient-version}</version>
         </dependency>
 
         <!-- yammer metrics -->
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-core</artifactId>
-            <version>2.0.2</version>
+            <version>${yammer-metrics-version}</version>
         </dependency>
         <dependency>
             <groupId>com.yammer.metrics</groupId>
             <artifactId>metrics-annotation</artifactId>
-            <version>2.0.2</version>
+            <version>${yammer-metrics-version}</version>
         </dependency>
-
 
         <!-- scala -->
         <dependency>
@@ -175,7 +179,7 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-lang</artifactId>
-            <version>2.4_6</version>
+            <version>${commons-lang-version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

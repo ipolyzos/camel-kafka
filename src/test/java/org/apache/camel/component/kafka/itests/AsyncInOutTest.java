@@ -28,12 +28,13 @@ import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaTestSupport;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelTestSupport;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Camel-Kafka Basic InOut Integration tests
  */
-//@Ignore("to run manually!")
+@Ignore("to run manually!")
 public class AsyncInOutTest extends KafkaTestSupport {
 
     final long uid = new Random().nextLong();

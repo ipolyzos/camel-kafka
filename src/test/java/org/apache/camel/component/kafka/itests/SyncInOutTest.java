@@ -35,7 +35,7 @@ import org.junit.Test;
 /**
  * Camel-Kafka Basic InOut Integration tests
  */
-//@Ignore("to run manually!")
+@Ignore("to run manually!")
 public class SyncInOutTest extends KafkaTestSupport {
 
     final long uid = new Random().nextLong();
