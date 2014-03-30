@@ -31,29 +31,32 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Camel-Kafka Basic Transfer Exchange InOut Integration tests
+ * Camel-Kafka Basic Transfer Exchange InOnly Integration test
  */
 @Ignore("to run manually!")
-public class SyncInOutTest extends KafkaTestSupport {
-
-    final long uid = new Random().nextLong();
+public class AsyncTransferEnxchangeInOnlyTest extends KafkaTestSupport {
 
     @EndpointInject(uri = "mock:result")
     private MockEndpoint mock;
 
+    final long uid = new Random().nextLong();
+
     @Test
-    public void syncInOutTest() throws Exception {
+    public void asyncTransferEnxchangeInOnlyTest() throws Exception {
 
-
-        final String TEST_PAYLOAD       = "Test Payload InOut!";
+        final String TEST_PAYLOAD       = "Test Payload InOnly!";
+        final String TEST_HEADER        = "Test.header";
+        final String TEST_HEADER_VALUE  = "test.header.value";
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(TEST_PAYLOAD);
+        mock.expectedHeaderReceived(TEST_HEADER, TEST_HEADER_VALUE);
 
-        template.send("direct:sioutep", ExchangePattern.InOut, new Processor() {
+        template.send("direct:ateioep", ExchangePattern.InOnly, new Processor() {
             public void process(Exchange exchange) throws Exception {
 
                 exchange.getIn().setBody(TEST_PAYLOAD);
+                exchange.getIn().setHeader(TEST_HEADER, TEST_HEADER_VALUE);
             }
         });
 
@@ -68,8 +71,8 @@ public class SyncInOutTest extends KafkaTestSupport {
             @Override
             public void configure() throws Exception {
 
-                from("direct:sioutep").to("kafka:siout?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
-                from("kafka:siout?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
+                from("direct:ateioep").to("kafka:ateio?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&transferExchange=true&producerType=async&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
+                from("kafka:ateio?zkConnect=localhost:2181&transferExchange=true&groupId="+ uid +KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
             }
         };
     }

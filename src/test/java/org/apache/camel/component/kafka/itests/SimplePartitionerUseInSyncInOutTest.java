@@ -31,7 +31,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Camel-Kafka Basic InOut Integration tests
+ * Camel-Kafka Basic InOut Integration test
  */
 @Ignore("to run manually!")
 public class SimplePartitionerUseInSyncInOutTest extends KafkaTestSupport {
@@ -45,19 +45,15 @@ public class SimplePartitionerUseInSyncInOutTest extends KafkaTestSupport {
     public void simplePartitionerUseInSyncInOutTest() throws Exception {
 
 
-        final String TEST_PAYLOAD       = "Test Payload InOut!";
-        final String TEST_HEADER        = "Test.header";
-        final String TEST_HEADER_VALUE  = "test.header.value";
+        final String TEST_PAYLOAD       = "Test Payload InOut with Simple Partitioner !";
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(TEST_PAYLOAD);
-        mock.expectedHeaderReceived(TEST_HEADER, TEST_HEADER_VALUE);
 
-        template.send("direct:bioouttps", ExchangePattern.InOut, new Processor() {
+        template.send("direct:spuisioutep", ExchangePattern.InOut, new Processor() {
             public void process(Exchange exchange) throws Exception {
 
                 exchange.getIn().setBody(TEST_PAYLOAD);
-                exchange.getIn().setHeader(TEST_HEADER, TEST_HEADER_VALUE);
             }
         });
 
@@ -72,8 +68,8 @@ public class SimplePartitionerUseInSyncInOutTest extends KafkaTestSupport {
             @Override
             public void configure() throws Exception {
 
-                from("direct:bioouttps").to("kafka:fooioutps?zkConnect=localhost:2181&partitionerClass=org.apache.camel.component.kafka.partitioner.SimplePartitioner&metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
-                from("kafka:fooioutps?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
+                from("direct:spuisioutep").to("kafka:spuisiout?zkConnect=localhost:2181&partitionerClass=org.apache.camel.component.kafka.partitioner.SimplePartitioner&metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
+                from("kafka:spuisiout?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
             }
         };
     }

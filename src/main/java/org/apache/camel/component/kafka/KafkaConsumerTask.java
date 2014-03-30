@@ -31,6 +31,7 @@ import static org.apache.camel.component.kafka.KafkaComponentUtil.constructExcha
 /**
  * Kafka Consumer Thread
  */
+@SuppressWarnings("unchecked")
 public class KafkaConsumerTask implements Runnable{
 
     /**
@@ -49,11 +50,6 @@ public class KafkaConsumerTask implements Runnable{
     private final Processor processor;
 
     /**
-     * Thread Id
-     */
-    private final long threadId;
-
-    /**
      * Camel Kafka Configuration
      */
     private final KafkaConfiguration configuration;
@@ -62,12 +58,6 @@ public class KafkaConsumerTask implements Runnable{
      * Camel Kafka Consumer
      */
     private final KafkaConsumer consumer;
-
-    /**
-     * Kafka Stream
-     */
-    private KafkaStream stream;
-
 
     /**
      * Consumer Iterator
@@ -87,11 +77,9 @@ public class KafkaConsumerTask implements Runnable{
 
         this.consumerIterator = stream.iterator();
         this.endpoint = endpoint;
+        this.consumer = consumer;
         this.processor = processor;
         this.configuration = configuration;
-        this.consumer = consumer;
-
-        this.threadId = Thread.currentThread().getId();
     }
 
     /**
@@ -100,30 +88,27 @@ public class KafkaConsumerTask implements Runnable{
     @Override
     public void run() {
        
-            if (LOGGER.isInfoEnabled()) {
+            if (LOGGER.isDebugEnabled()) {
 
-                LOGGER.info("Camel Kafka Consumer (" + threadId + ") started.");
+                LOGGER.debug("Camel Kafka Consumer started.");
             }
 
             while (consumerIterator.hasNext()) {
 
                 MessageAndMetadata<byte[], byte[]> incomingData = consumerIterator.next();
 
-                final Exchange exchange = endpoint.createExchange();
-
                 if (incomingData != null) {
-
-                    constructExchange(incomingData, configuration, exchange);
 
                     if (LOGGER.isDebugEnabled()) {
 
-                        LOGGER.info("Kafka Consumer Message received : " + incomingData);
+                        LOGGER.debug("Kafka Consumer Message received : " + incomingData);
                     }
+
+                    final Exchange exchange = constructExchange(endpoint, incomingData, configuration);
 
                     try {
 
                         this.processor.process(exchange);
-
                     } catch (Exception e) {
 
                         LOGGER.error("Error processing the message:", e);

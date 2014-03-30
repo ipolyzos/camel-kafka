@@ -19,7 +19,6 @@ package org.apache.camel.component.kafka.itests;
 
 import java.util.Random;
 
-import kafka.Kafka;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
@@ -28,12 +27,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaTestSupport;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Camel-Kafka Basic InOnly Integration tests
+ * Camel-Kafka Basic InOnly Integration test
  */
 @Ignore("to run manually!")
 public class SyncInOnlyTest extends KafkaTestSupport {
@@ -44,21 +42,17 @@ public class SyncInOnlyTest extends KafkaTestSupport {
     final long uid = new Random().nextLong();
 
     @Test
-    public void syncInOnly() throws Exception {
+    public void syncInOnlyTest() throws Exception {
 
         final String TEST_PAYLOAD       = "Test Payload InOnly!";
-        final String TEST_HEADER        = "Test.header";
-        final String TEST_HEADER_VALUE  = "test.header.value";
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(TEST_PAYLOAD);
-        mock.expectedHeaderReceived(TEST_HEADER, TEST_HEADER_VALUE);
 
-        template.send("direct:biot", ExchangePattern.InOnly, new Processor() {
+        template.send("direct:sioep", ExchangePattern.InOnly, new Processor() {
             public void process(Exchange exchange) throws Exception {
 
                 exchange.getIn().setBody(TEST_PAYLOAD);
-                exchange.getIn().setHeader(TEST_HEADER, TEST_HEADER_VALUE);
             }
         });
 
@@ -73,8 +67,8 @@ public class SyncInOnlyTest extends KafkaTestSupport {
             @Override
             public void configure() throws Exception {
 
-                from("direct:biot").to("kafka:bio?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
-                from("kafka:bio?zkConnect=localhost:2181&groupId="+ uid +KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
+                from("direct:sioep").to("kafka:sio?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
+                from("kafka:sio?zkConnect=localhost:2181&groupId="+ uid +KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
             }
         };
     }

@@ -71,6 +71,7 @@ public class KafkaEndpoint extends DefaultEndpoint {
      */
     @Override
     public boolean isSingleton() {
+
         return true;
     }
 }

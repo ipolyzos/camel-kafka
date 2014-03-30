@@ -33,11 +33,6 @@ import org.junit.Test;
 public class KafkaProducerTest extends KafkaTestSupport {
 
     /**
-     * Mock CamelExchange
-     */
-    private Exchange mockCamelExchange;
-
-    /**
      * Mock Camel-Kafka Endpoint
      */
     private KafkaEndpoint mockKafkaEndpoint;
@@ -47,19 +42,20 @@ public class KafkaProducerTest extends KafkaTestSupport {
      */
     private KafkaConfiguration mockKafkaConfiguration;
 
-    /**
-     * Mock Camel Message
-     */
-    private Message mockCamelMessage;
-
     @Before
     public void setUp()  {
 
         //setup mocks
-        mockCamelExchange = mock(Exchange.class);
+        /*
+      Mock CamelExchange
+     */
+        Exchange mockCamelExchange = mock(Exchange.class);
         mockKafkaEndpoint = mock(KafkaEndpoint.class);
         mockKafkaConfiguration = spy(new KafkaConfiguration());
-        mockCamelMessage = mock(Message.class);
+        /*
+      Mock Camel Message
+     */
+        Message mockCamelMessage = mock(Message.class);
 
         //setup default conditions
         when(mockCamelExchange.getIn()).thenReturn(mockCamelMessage);

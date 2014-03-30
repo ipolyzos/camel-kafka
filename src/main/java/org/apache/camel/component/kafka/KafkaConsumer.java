@@ -53,12 +53,7 @@ public class KafkaConsumer extends DefaultConsumer {
    */
   private ExecutorService executor;
 
-  /**
-   * Kafka Streams
-   */
-  private List<KafkaStream<byte[], byte[]>> streams;
-
-  /**
+    /**
    * Camel-Kafka Configuration
    */
   private KafkaConfiguration configuration;
@@ -87,8 +82,6 @@ public class KafkaConsumer extends DefaultConsumer {
     // validate configuration
     checkConsumerConfiguration(configuration);
 
-
-
   }
 
   @Override
@@ -112,7 +105,10 @@ public class KafkaConsumer extends DefaultConsumer {
     final Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
 
     // create message streams
-    streams = consumerMap.get(configuration.getTopicName());
+    /*
+    Kafka Streams
+   */
+      List<KafkaStream<byte[], byte[]>> streams = consumerMap.get(configuration.getTopicName());
 
     // create different thread to process streams
     for (final KafkaStream stream : streams) {
@@ -127,7 +123,7 @@ public class KafkaConsumer extends DefaultConsumer {
     super.doStop();
     if (LOGGER.isDebugEnabled()) {
 
-      LOGGER.info("Stoping Kafka Consumer");
+      LOGGER.info("Stopping Kafka Consumer");
     }
 
     if (consumer != null) {

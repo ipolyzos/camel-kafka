@@ -28,7 +28,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Transfer Exchange Spring support tests
  */
 @Ignore("to run manually!")
-public class SpringSupportTest extends CamelSpringTestSupport {
+public class TransferExchangeSpringSupportTest extends CamelSpringTestSupport {
 
     /**
      * Mock Endpoint used for verification
@@ -43,12 +43,12 @@ public class SpringSupportTest extends CamelSpringTestSupport {
      * @throws Exception
      */
     @Test
-    public void springSupportTest() throws Exception {
+    public void transferExchangeSpringSupportTest() throws Exception {
 
-        final String PAYLOAD = "SpringBasicTest";
+        final String PAYLOAD = "SpringBasicTransferExchangeTest";
 
         mock.reset();  // reset the mock
-        template.sendBody("direct:basicTest", PAYLOAD);
+        template.sendBody("direct:basicTransferExchangeTest", PAYLOAD);
 
         //setup the actual expectation
         mock.expectedMessageCount(1);
@@ -57,6 +57,7 @@ public class SpringSupportTest extends CamelSpringTestSupport {
         assertMockEndpointsSatisfied();
         mock.reset();
     }
+
 
     /**
      * load spring context

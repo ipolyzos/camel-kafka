@@ -44,6 +44,11 @@ public class KafkaConfiguration {
     private String topicName;
 
     /**
+     * Transfer Exchange
+     */
+    private boolean transferExchange = false;
+
+    /**
      * Concurrent consumers (i.e streams in this context)
      */
     private int concurrentConsumers = 10;
@@ -147,6 +152,26 @@ public class KafkaConfiguration {
     public void setTopicName(String topicName) {
 
         this.topicName = topicName;
+    }
+
+    /**
+     * Get transfer exchange
+     *
+     * @return
+     */
+    public boolean isTransferExchange() {
+
+        return transferExchange;
+    }
+
+    /**
+     * Set transfer exchange
+     *
+     * @param transferExchange
+     */
+    public void setTransferExchange(boolean transferExchange) {
+
+        this.transferExchange = transferExchange;
     }
 
     /**

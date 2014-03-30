@@ -49,7 +49,7 @@
             org.apache.hadoop.conf;version="[1,2)"
         </camel.osgi.import>
         <camel.osgi.export.pkg>
-            org.apache.camel.component.*
+            org.apache.camel.component.kafka.*
         </camel.osgi.export.pkg>
         <camel.osgi.export.pkg>org.apache.camel.component.kafka.*</camel.osgi.export.pkg>
         <camel.osgi.export.service>org.apache.camel.spi.ComponentResolver;component=kafka</camel.osgi.export.service>

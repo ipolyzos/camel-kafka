@@ -21,19 +21,24 @@ import org.apache.camel.Main;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.dataset.DataSet;
 import org.apache.camel.component.dataset.SimpleDataSet;
+import org.apache.camel.component.kafka.KafkaConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * Simple test for approximate load measurements through the throughput logger
+ * please note that in this test the whole exchange is send
  *
  * NOTE: need to review for correctness
  */
 public class SimpleLoadTest extends Main {
 
     static Logger LOGGER = LoggerFactory.getLogger(SimpleLoadTest.class);
+
+    final long uid = new Random().nextLong();
 
     /**
      * Test the Camel-Kafka, set topic by headers and sync producer
@@ -61,6 +66,10 @@ public class SimpleLoadTest extends Main {
             public void configure() {
 
                 from("dataset://sampleGenerator?produceDelay=0")
+                        .setHeader(KafkaConstants.PARTITION_KEY.value,constant("LoadTest"))
+                        .to("kafka:fooiout?zkConnect=localhost:2181&partitionKey=1&metadataBrokerList=localhost:9092&transferExchange=true&groupId="+KafkaConstants.DEFAULT_GROUP.value);
+
+                from("kafka:fooiout?zkConnect=localhost:2181&partitionKey=1&transferExchange=true&groupId=" + KafkaConstants.DEFAULT_GROUP.value)
                         .to("log://demo?groupSize=1000&level=INFO");
             }
         };
@@ -72,7 +81,7 @@ public class SimpleLoadTest extends Main {
     static DataSet createDataSet() {
 
         final SimpleDataSet result = new SimpleDataSet();
-        result.setSize(100000); //100k
+        result.setSize(10000);
         result.setDefaultBody(createSamplePayload(2000000));
 
         return result;

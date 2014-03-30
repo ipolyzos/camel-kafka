@@ -24,7 +24,9 @@ import kafka.consumer.ConsumerConfig;
 import kafka.message.MessageAndMetadata;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultExchangeHolder;
+import org.apache.camel.impl.DefaultMessage;
 import org.apache.commons.lang.SerializationUtils;
 
 import java.util.concurrent.ExecutorService;
@@ -79,8 +81,8 @@ public final class KafkaComponentUtil {
     /**
      * Util method to create a Consumer Config
      *
-     * @param configuration
-     * @return
+     * @param configuration Kafka Configuration
+     * @return Consumer Config
      */
     protected static ConsumerConfig createConsumerConfig(final KafkaConfiguration configuration) {
 
@@ -90,12 +92,34 @@ public final class KafkaComponentUtil {
     /**
      * Utility method to serialize the whole exchange.
      *
-     * @param exchange
-     * @return
+     * @param exchange Exchange
+     * @return  byte array
      */
     public static byte[] serializeExchange(final Exchange exchange) {
 
         return SerializationUtils.serialize(DefaultExchangeHolder.marshal(exchange));
+    }
+
+    /**
+     * Utility method to serialize the whole exchange.
+     *
+     * @param exchange
+     * @return
+     */
+    public static byte[] serializeBody(final Exchange exchange) {
+
+        return SerializationUtils.serialize(exchange.getIn().getBody(byte[].class));
+    }
+
+    /**
+     * Utility method to serialize the whole exchange.
+     *
+     * @param body
+     * @return
+     */
+    public static Object deserializeBody(final byte[] body) {
+
+        return SerializationUtils.deserialize(body);
     }
 
     /**
@@ -114,34 +138,47 @@ public final class KafkaComponentUtil {
     }
 
     /**
-     * Utility method to create exchange from incomming data
+     * Utility method to create exchange from incoming data
      *
-     * @param incommingData
+     * @param incomingData
      * @param configuration
-     * @param exchange
      */
-    protected static void constructExchange(final MessageAndMetadata<byte[], byte[]> incommingData,
-                                            final KafkaConfiguration configuration,
-                                            Exchange exchange) {
+    protected static Exchange constructExchange(final KafkaEndpoint endpoint,
+                                                final MessageAndMetadata<byte[], byte[]> incomingData,
+                                                final KafkaConfiguration configuration) {
 
-            DefaultExchangeHolder exchangeHolder = (DefaultExchangeHolder) SerializationUtils.deserialize(incommingData.message());
+        Exchange exchange = new DefaultExchange(endpoint.getCamelContext(), endpoint.getExchangePattern());
+
+        if (configuration.isTransferExchange()) { // transfer exchange?
+
+            DefaultExchangeHolder exchangeHolder = (DefaultExchangeHolder) SerializationUtils.deserialize(incomingData.message());
             DefaultExchangeHolder.unmarshal(exchange, exchangeHolder);
+        }else{
 
-        fillExchangeInMessageWithMetadata(exchange, incommingData);
+            final Message message = new DefaultMessage();
+            message.setBody(deserializeBody(incomingData.message()));
+            exchange.setIn(message);
+        }
+
+        fillExchangeInMessageWithMetadata(exchange, incomingData);
+
+        return exchange;
+
     }
 
     /**
      * Utility method to fill in message with metadata
      *
      * @param exchange
-     * @param incommingData
+     * @param incomingData
      */
     private static void fillExchangeInMessageWithMetadata(final Exchange exchange,
-                                                          final MessageAndMetadata<byte[], byte[]> incommingData) {
+                                                          final MessageAndMetadata<byte[], byte[]> incomingData) {
         final Message message = exchange.getIn();
 
-        message.setHeader(KafkaConstants.PARTITION.value, incommingData.partition());
-        message.setHeader(KafkaConstants.TOPIC.value, incommingData.topic());
-        message.setHeader(KafkaConstants.KEY.value, new String(incommingData.key()));
+        message.setHeader(KafkaConstants.PARTITION.value, incomingData.partition());
+        message.setHeader(KafkaConstants.TOPIC.value, incomingData.topic());
+        message.setHeader(KafkaConstants.OFFSET.value, incomingData.offset());
+        message.setHeader(KafkaConstants.KEY.value, incomingData.key());
     }
 }

@@ -27,12 +27,11 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaTestSupport;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Camel-Kafka Basic InOut Integration tests
+ * Camel-Kafka Basic InOut Integration test
  */
 @Ignore("to run manually!")
 public class AsyncInOutTest extends KafkaTestSupport {
@@ -47,18 +46,14 @@ public class AsyncInOutTest extends KafkaTestSupport {
 
 
         final String TEST_PAYLOAD       = "Test Payload InOut!";
-        final String TEST_HEADER        = "Test.header";
-        final String TEST_HEADER_VALUE  = "test.header.value";
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(TEST_PAYLOAD);
-        mock.expectedHeaderReceived(TEST_HEADER, TEST_HEADER_VALUE);
 
-        template.send("direct:biooutta", ExchangePattern.InOut, new Processor() {
+        template.send("direct:kaiouttep", ExchangePattern.InOut, new Processor() {
             public void process(Exchange exchange) throws Exception {
 
                 exchange.getIn().setBody(TEST_PAYLOAD);
-                exchange.getIn().setHeader(TEST_HEADER, TEST_HEADER_VALUE);
             }
         });
 
@@ -73,8 +68,8 @@ public class AsyncInOutTest extends KafkaTestSupport {
             @Override
             public void configure() throws Exception {
 
-                from("direct:biooutta").to("kafka:fooiouta?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&producerType=async&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
-                from("kafka:fooiouta?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
+                from("direct:kaiouttep").to("kafka:kaioutt?zkConnect=localhost:2181&metadataBrokerList=localhost:9092&producerType=async&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value);
+                from("kafka:kaioutt?zkConnect=localhost:2181&groupId="+ uid + KafkaConstants.DEFAULT_GROUP.value).to("mock:result");
             }
         };
     }

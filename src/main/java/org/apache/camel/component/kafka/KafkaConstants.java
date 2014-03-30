@@ -68,6 +68,7 @@ public enum KafkaConstants {
 
     PARTITION_KEY("kafka.PARTITION_KEY"),
     PARTITION("kafka.EXCHANGE_NAME"),
+    OFFSET("kafka.OFFSET"),
     KEY("kafka.CONTENT_TYPE"),
     TOPIC("kafka.TOPIC");
 

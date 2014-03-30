@@ -25,11 +25,21 @@
 
         <route>
             <from uri="direct:basicTest"/>
-            <to uri="kafka:spr?zkConnect=localhost:2181&amp;metadataBrokerList=localhost:9092&amp;groupId=11"/>
+            <to uri="kafka:sprs?zkConnect=localhost:2181&amp;metadataBrokerList=localhost:9092&amp;groupId=10"/>
         </route>
 
         <route>
-            <from uri="kafka:spr?zkConnect=localhost:2181&amp;groupId=11"/>
+            <from uri="direct:basicTransferExchangeTest"/>
+            <to uri="kafka:sprTe?zkConnect=localhost:2181&amp;metadataBrokerList=localhost:9092&amp;groupId=11&amp;transferExchange=true"/>
+        </route>
+
+        <route>
+            <from uri="kafka:sprs?zkConnect=localhost:2181&amp;groupId=10"/>
+            <to uri="mock:result"/>
+        </route>
+
+        <route>
+            <from uri="kafka:sprTe?zkConnect=localhost:2181&amp;groupId=11&amp;transferExchange=true"/>
             <to uri="mock:result"/>
         </route>
 

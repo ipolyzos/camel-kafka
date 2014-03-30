@@ -19,7 +19,6 @@ package org.apache.camel.component.kafka;
 
 import static org.mockito.Mockito.*;
 
-import org.I0Itec.zkclient.exception.ZkException;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.Message;
@@ -34,11 +33,6 @@ import org.junit.Test;
 public class KafkaConsumerTest extends KafkaTestSupport {
 
     /**
-     * Mock CamelExchange
-     */
-    private Exchange mockCamelExchange;
-
-    /**
      * Mock Camel-Kafka Endpoint
      */
     private KafkaEndpoint mockKafkaEndpoint;
@@ -49,11 +43,6 @@ public class KafkaConsumerTest extends KafkaTestSupport {
     private KafkaConfiguration mockKafkaConfiguration;
 
     /**
-     * Mock Camel  Message
-     */
-    private Message mockCamelMessage;
-
-    /**
      * Mock Processor
      */
     private Processor mockKafkaProcessor;
@@ -62,10 +51,16 @@ public class KafkaConsumerTest extends KafkaTestSupport {
     public void setUp()  {
 
         //setup mocks
-        mockCamelExchange = mock(Exchange.class);
+        /*
+      Mock CamelExchange
+     */
+        Exchange mockCamelExchange = mock(Exchange.class);
         mockKafkaEndpoint = mock(KafkaEndpoint.class);
         mockKafkaConfiguration = spy(new KafkaConfiguration());
-        mockCamelMessage = mock(Message.class);
+        /*
+      Mock Camel  Message
+     */
+        Message mockCamelMessage = mock(Message.class);
         mockKafkaProcessor =  mock(Processor.class);
 
         //setup default conditions

@@ -18,6 +18,7 @@
 package org.apache.camel.component.kafka;
 
 import static org.apache.camel.component.kafka.KafkaComponentUtil.checkProducerConfiguration;
+import static org.apache.camel.component.kafka.KafkaComponentUtil.serializeBody;
 import static org.apache.camel.component.kafka.KafkaComponentUtil.serializeExchange;
 
 import kafka.javaapi.producer.Producer;
@@ -70,13 +71,13 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public final void process(Exchange exchange) throws Exception {
 
         checkAndSend(exchange);
     }
 
     @Override
-    public boolean process(final Exchange exchange,
+    public final boolean process(final Exchange exchange,
                            final AsyncCallback callback) {
 
         checkAndSend(exchange);
@@ -92,7 +93,7 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
     private void checkAndSend(final Exchange exchange) {
 
         String partitionKey;
-        if (exchange.getIn().getHeaders().containsKey(KafkaConstants.PARTITION_KEY)) {
+        if (exchange.getIn().getHeaders().containsKey(KafkaConstants.PARTITION_KEY.value)) {
 
             partitionKey = exchange.getIn().getHeader(KafkaConstants.PARTITION_KEY.value, String.class);
         } else {
@@ -110,7 +111,15 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
             topicName = configuration.getTopicName();
         }
 
-        final KeyedMessage<String, byte[]> message = new KeyedMessage<String,  byte[]>(topicName, partitionKey, serializeExchange(exchange));
+        final KeyedMessage<String, byte[]> message;
+
+        if (configuration.isTransferExchange()){ //should transfer exchange?
+
+            message = new KeyedMessage<String,  byte[]>(topicName, partitionKey, serializeExchange(exchange));
+        } else{
+
+            message = new KeyedMessage<String,  byte[]>(topicName, partitionKey, serializeBody(exchange));
+        }
 
         producer.send(message);
 
