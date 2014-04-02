@@ -88,6 +88,10 @@ public class KafkaProducer extends DefaultProducer implements AsyncProcessor {
     /**
      * Utility method to prepare and send data
      *
+     *
+     * TODO:
+     *  modify to be able to make use of Encoders other than Default
+     *
      * @param exchange
      */
     private void checkAndSend(final Exchange exchange) {

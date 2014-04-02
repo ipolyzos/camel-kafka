@@ -180,6 +180,7 @@ public class KafkaConfiguration {
      * @return
      */
     public int getConcurrentConsumers() {
+
         return concurrentConsumers;
     }
 
@@ -189,6 +190,7 @@ public class KafkaConfiguration {
      * @param concurrentConsumers
      */
     public void setConcurrentConsumers(int concurrentConsumers) {
+
         this.concurrentConsumers = concurrentConsumers;
     }
 
@@ -868,8 +870,6 @@ public class KafkaConfiguration {
          *  props.setProperty("serializer.class",serializerClass);
          * }
          */
-
-        LOGGER.debug("Only default serializer support in this version, setting serializer would not work");
 
         props.setProperty("serializer.class",KafkaConstants.DEFAULT_SERIALIZER_CLASS.value);
     }

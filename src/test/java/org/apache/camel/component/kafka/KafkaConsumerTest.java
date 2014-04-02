@@ -1,18 +1,11 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE
+ * file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file
+ * to You under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by
+ * applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 package org.apache.camel.component.kafka;
@@ -32,87 +25,85 @@ import org.junit.Test;
  */
 public class KafkaConsumerTest extends KafkaTestSupport {
 
-    /**
-     * Mock Camel-Kafka Endpoint
+  /**
+   * Mock Camel-Kafka Endpoint
+   */
+  private KafkaEndpoint mockKafkaEndpoint;
+
+  /**
+   * Mock Camel-Kafka Configuration
+   */
+  private KafkaConfiguration mockKafkaConfiguration;
+
+  /**
+   * Mock Processor
+   */
+  private Processor mockKafkaProcessor;
+
+  @Before
+  public void setUp() {
+
+    // setup mocks
+
+    Exchange mockCamelExchange = mock(Exchange.class);
+    mockKafkaEndpoint = mock(KafkaEndpoint.class);
+    mockKafkaConfiguration = spy(new KafkaConfiguration());
+    /*
+     * Mock Camel Message
      */
-    private KafkaEndpoint mockKafkaEndpoint;
+    Message mockCamelMessage = mock(Message.class);
+    mockKafkaProcessor = mock(Processor.class);
 
-    /**
-     * Mock Camel-Kafka Configuration
-     */
-    private KafkaConfiguration mockKafkaConfiguration;
+    // setup default conditions
+    when(mockCamelExchange.getIn()).thenReturn(mockCamelMessage);
+    when(mockCamelExchange.getPattern()).thenReturn(ExchangePattern.InOnly);
+  }
 
-    /**
-     * Mock Processor
-     */
-    private Processor mockKafkaProcessor;
+  public void creatingAnInstanceShouldNotThrowExceptionIfConfigurationIsMissingGroupId() throws Exception {
 
-    @Before
-    public void setUp()  {
+    mockKafkaConfiguration.setZookeeperConnect("samplehost");
 
-        //setup mocks
-        /*
-      Mock CamelExchange
-     */
-        Exchange mockCamelExchange = mock(Exchange.class);
-        mockKafkaEndpoint = mock(KafkaEndpoint.class);
-        mockKafkaConfiguration = spy(new KafkaConfiguration());
-        /*
-      Mock Camel  Message
-     */
-        Message mockCamelMessage = mock(Message.class);
-        mockKafkaProcessor =  mock(Processor.class);
+    new KafkaConsumer(mockKafkaEndpoint, mockKafkaProcessor, mockKafkaConfiguration);
 
-        //setup default conditions
-        when(mockCamelExchange.getIn()).thenReturn(mockCamelMessage);
-        when(mockCamelExchange.getPattern()).thenReturn(ExchangePattern.InOnly);
-    }
+    verify(mockKafkaConfiguration, atMost(1)).getGroupId();
+    verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
+    verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
+  }
 
-    public void creatingAnInstanceShouldNotThrowExceptionIfConfigurationIsMissingGroupId() throws Exception {
+  public void creatingAnInstanceShouldNotThrowExceptionIfConfigurationIsMissingZKConnect() throws Exception {
 
-        mockKafkaConfiguration.setZookeeperConnect("samplehost");
+    mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
 
-        new KafkaConsumer(mockKafkaEndpoint,mockKafkaProcessor,mockKafkaConfiguration);
+    new KafkaConsumer(mockKafkaEndpoint, mockKafkaProcessor, mockKafkaConfiguration);
 
-        verify(mockKafkaConfiguration, atMost(1)).getGroupId();
-        verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
-        verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
-    }
+    verify(mockKafkaConfiguration, atMost(1)).getGroupId();
+    verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
+    verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
+  }
 
-    public void creatingAnInstanceShouldNotThrowExceptionIfConfigurationIsMissingZKConnect() throws Exception {
+  public void creatingAnInstanceShouldNotFailIfFakeHostIsProvidedInMandatoryConfiguration() throws Exception {
 
-        mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
+    mockKafkaConfiguration.setZookeeperConnect("sampleHost");
+    mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
 
-        new KafkaConsumer(mockKafkaEndpoint,mockKafkaProcessor,mockKafkaConfiguration);
+    new KafkaConsumer(mockKafkaEndpoint, mockKafkaProcessor, mockKafkaConfiguration);
 
-        verify(mockKafkaConfiguration, atMost(1)).getGroupId();
-        verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
-        verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
-    }
+    verify(mockKafkaConfiguration, atMost(1)).getGroupId();
+    verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
+    verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
+  }
 
-    public void creatingAnInstanceShouldNotFailIfFakeHostIsProvidedInMandatoryConfiguration() throws Exception {
+  @Test
+  //@Ignore("This test requires an instance of zookeeper running localy")
+  public void creatingAnInstanceShouldSuccessedIfMandatoryConfigurationIsProvided() throws Exception {
 
-        mockKafkaConfiguration.setZookeeperConnect("sampleHost");
-        mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
+    mockKafkaConfiguration.setZookeeperConnect("localhost:2181");
+    mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
 
-        new KafkaConsumer(mockKafkaEndpoint,mockKafkaProcessor,mockKafkaConfiguration);
+    new KafkaConsumer(mockKafkaEndpoint, mockKafkaProcessor, mockKafkaConfiguration);
 
-        verify(mockKafkaConfiguration, atMost(1)).getGroupId();
-        verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
-        verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
-    }
-
-    @Test
-    @Ignore("This test requires an instance of zookeeper running localy")
-    public void creatingAnInstanceShouldSuccessedIfMandatoryConfigurationIsProvided() throws Exception {
-
-        mockKafkaConfiguration.setZookeeperConnect("localhost:2181");
-        mockKafkaConfiguration.setGroupId(KafkaConstants.DEFAULT_GROUP.value);
-
-        new KafkaConsumer(mockKafkaEndpoint,mockKafkaProcessor,mockKafkaConfiguration);
-
-        verify(mockKafkaConfiguration, atMost(1)).getGroupId();
-        verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
-        verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
-    }
+    verify(mockKafkaConfiguration, atMost(1)).getGroupId();
+    verify(mockKafkaConfiguration, atMost(1)).getZkConnect();
+    verify(mockKafkaConfiguration, atMost(1)).getZookeeperConnect();
+  }
 }
