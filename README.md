@@ -2,11 +2,7 @@
 
 ## Documentation : 
 
-... Comming soon!
-
-## Downloads :
-
-... Comming soon!
+ Documentation for the camel-kafka component can be found in the [wiki pages](https://github.com/ipolyzos/camel-kafka/wiki).
     
 ## Conclusion
 
