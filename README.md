@@ -1,12 +1,14 @@
 #  Camel-Kafka
 
+## Overview
+
+[Apache Kafka](http://kafka.apache.org/), is a distributed messaging system that due to its architecture, performance and scalability characteristics, has proven to be revolutionary in today’s messaging technologies and has been used with success in several domains and projects - most notably among them the LinkedIn’s real-time activity data pipeline. **Camel-Kafka** is an [Apache Camel](http://camel.apache.org/) component that allows you to work with [Apache Kafka](http://kafka.apache.org/) message oriented middleware.
+
+
 ## Documentation : 
 
  Documentation for the camel-kafka component can be found in the [wiki pages](https://github.com/ipolyzos/camel-kafka/wiki).
     
-## Conclusion
-
-Just try this !
 
 ##  License:
 
